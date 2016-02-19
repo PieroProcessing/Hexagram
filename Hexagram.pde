@@ -1,15 +1,21 @@
-iChing observe; //<>//
+iChing observe; //<>// //<>// //<>//
 
 FloatList prevColor = new FloatList();
 FloatList aktColor  = new FloatList();
 
 void setup() {
-  size (1292, 129);
+  size (640, 480);
  // frameRate(25);
   observe = new iChing();
 }
 void draw () {
-
+/*
+//  background(0);
+  rectMode(CENTER);
+  noFill();
+  stroke(255);
+  rect(width/2,height/2,width-10,height-10);
+  */
   observe.cleromancy();
   observe.interaction();
 }

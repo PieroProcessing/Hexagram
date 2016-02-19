@@ -1,43 +1,49 @@
 class iChing {
 
-  Bar[] bars = new Bar[64];
+  Bar[][] bars = new Bar[8][8];
   Timer t;
 
   // ambient variable
-  float a;
+  int a, b;
+  int lengthB=8;
 
   iChing() {
 
-    t= new Timer(1000);
+    t= new Timer(5000);
     t.start();
 
-    a = width/64;
+    a = width/8;
+    b = height/8;
 
     //init the 64 bar in the window
-    for (int i = 0; i<bars.length; i++) {
-      float tempV = a*i;
-      bars[i] = new Bar(tempV+8);
+    for (int i = 0; i<lengthB; i++) {
+      for (int j = 0; j<lengthB; j++) {
+        bars[i][j] = new Bar(a*i, b*j);
+      }
     }
     // to store the actual data in memory for the lerp algorithm
     storeColor();
 
     background (0);
-    translate(0, height/3);
-    for (int i = 0; i<bars.length; i++) {
-      //set the bars
-      bars[i].sxBar();
-      bars[i].dxBar();
-      bars[i].setCxBar(i); // set the central bar with the index position = i
+    translate(width/64, height/100);
+    for (int i = 0; i<lengthB; i++) {
+      for (int j = 0; j<lengthB; j++) {
+        //set the bars
+        bars[i][j].sxBar();
+        bars[i][j].dxBar();
+      }
     }
   }
   void interaction() {
     pushMatrix();
-    translate(0, height/3);
-    for (int i = 0; i<bars.length; i++) {
-      if (bars[i].check()) {  // check if the mouse is over
-        bars[i].meddle(i);   //reset new color for that bar and change velocity
+    translate(width/64, height/100);
+    for (int i = 0; i<lengthB; i++) {
+      for (int j = 0; j<lengthB; j++) {
+        if (bars[i][j].check()) {  // check if the mouse is over
+          bars[i][j].meddle(i, j);   //reset new color for that bar and change velocity
+        }
+        bars[i][j].displayCxBar(i, j);
       }
-      bars[i].displayCxBar(i); 
     }
     popMatrix();
   }
@@ -51,14 +57,16 @@ class iChing {
     aktColor.clear();
   }
   void formatColor () {
-    for (int i = 0; i<bars.length; i++) {
-      bars[i].changeColor();    // the way to put random value to each bar
+    for (int i = 0; i<lengthB; i++) {
+      for (int j = 0; j<lengthB; j++) {
+        bars[i][j].changeColor();    // the way to put random value to each bar
+      }
     }
   }
 
   void storeColor() {
     for (int i=0; i<prevColor.size(); i++) {
-      aktColor.append(prevColor.get(i));
+      aktColor.append(randomizer());
     }
   }
 }

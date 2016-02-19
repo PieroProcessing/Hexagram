@@ -1,60 +1,57 @@
 class Bar {
-  float SPACE = height/24;
-  int SIZE=6;
 
-  float x;
+  int SIZE=6;
+  int wB = 20;
+  int hB =7;
+  int SPACE = hB+2;
+  int x, y;
   float lerpValue;
 
-  Bar (float x_) {
+  Bar (int x_, int y_) {
     rectMode(CORNER);
     noStroke();
     x = x_;
-    for (int y = 0; y < SIZE; y++) {      
+    y = y_;
+
+    for (int i = 0; i < SIZE; i++) {      
       prevColor.append(randomizer());
     }
+    //  println(prevColor.size());
   }
   void sxBar() {
-    for (int y = 0; y < SIZE; y++) {
+    for (int i = 0; i < SIZE; i++) {      
       fill(255);
-      rect(x, y*SPACE, 5, 3);
+      rect(x, y+i*SPACE, wB, hB);
     }
   }
   void dxBar () {
-    for (int y = 0; y < SIZE; y++) {
+    for (int i = 0; i < SIZE; i++) {      
       fill(255);
-      rect(x+10, y*SPACE, 5, 3);
+      rect(x+wB*2, y+i*SPACE, wB, hB);
     }
   }
-  void setCxBar(int i) {
-    for (int y = 0; y < SIZE; y++) {
-      int pos = i*6+y;                    // the algoritm to find the x and the y of each hexagram
-      fill(prevColor.get(pos));
-      rect(x+5, y*SPACE, 5, 3);
-    }
-  }
-  void displayCxBar(int i) {
-    for (int y = 0; y < SIZE; y++) {
-      int pos = i*6+y;
-      
+  void displayCxBar(int a, int b) {
+    for (int i = 0; i < SIZE; i++) {      
+      int pos = a*6+b*48+i;            
       // set the transitions of colors
-      float j =lerp(prevColor.get(pos), aktColor.get(pos), transition());  
+      float fillC =lerp(prevColor.get(pos), aktColor.get(pos), transition());  
       if (check()) {
-        fill(j, 0, 0);
+        fill(fillC, 0, 0);
       } else {
-        fill(j);
+        fill(fillC);
       }
-      rect(x+5, y*SPACE, 5, 3);
-      prevColor.set(pos, j);
+      rect(x+wB, y+i*SPACE, wB, hB);
+      prevColor.set(pos, fillC);
     }
   }
   void changeColor() {
-    for (int y = 0; y < SIZE; y++) {      
+    for (int i = 0; i < SIZE; i++) {      
       aktColor.append(randomizer());
     }
   }
-  void meddle (int i) {
-    for (int y = 0; y < SIZE; y++) {
-      int pos = i*6+y;
+  void meddle (int a, int b) {
+    for (int i = 0; i < SIZE; i++) {      
+      int pos = a*6+b*48+i;        
       aktColor.set(pos, randomizer());
     }
   }
@@ -62,17 +59,24 @@ class Bar {
     if (check()) { 
       lerpValue = 1;
     } else { 
-      lerpValue = 0.02;
+      lerpValue = .03;
     }
     return lerpValue;
   }
   boolean check() {
     boolean tip = false;
     PVector mouse = new PVector (mouseX, mouseY);
-    for (int y = 0; y < SIZE; y++) {
-      PVector point = new PVector (x+5, y * SPACE + height/3);
-      float dist = mouse.dist(point);  
-      if (dist< 6) {
+    for (int i = 0; i < SIZE; i++) {    
+      
+      PVector point1 = new PVector (x+width/64+wB/2, y+hB/2+height/100+i*SPACE);
+      PVector point2 = new PVector (x+wB+width/64+wB/2, y+hB/2+height/100+i*SPACE);
+      PVector point3 = new PVector (x+wB*2+width/64+wB/2, y+hB/2+height/100+i*SPACE);
+
+      float dist1 = mouse.dist(point1);  
+      float dist2= mouse.dist(point2);  
+      float dist3 = mouse.dist(point3);  
+      
+      if (dist1< 7 || dist2<7 || dist3<7) {
         tip = true;
         break;
       } else {
